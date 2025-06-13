@@ -1,12 +1,12 @@
 import java.util.List;
 
 public class VFun implements IValue {
-    List<String> parameters;
+    String parameter;
     ASTNode body;
     Environment<IValue> env;
 
-    public VFun(List<String> parameters0, ASTNode body0, Environment<IValue> env0) {
-        parameters = parameters0;
+    public VFun(String parameter0, ASTNode body0, Environment<IValue> env0) {
+        parameter = parameter0;
         body = body0;
         env = env0;
     }
@@ -16,18 +16,14 @@ public class VFun implements IValue {
 
         Environment<IValue> newEnv = env.beginScope();
 
-        newEnv.assoc(parameters.get(0), args);
-
-        if (parameters.size() > 1) {
-            return new VFun(parameters.subList(1, parameters.size()), body, newEnv);
-        }
+        newEnv.assoc(parameter, args);
 
         return body.eval(newEnv);
     }
 
     public String toStr() {
         return "VFun{" +
-                "parameters=" + parameters +
+                "parameters=" + parameter +
                 ", body=" + body +
                 ", env=" + env +
                 '}';

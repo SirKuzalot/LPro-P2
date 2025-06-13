@@ -270,9 +270,10 @@ ASTNode Fact() :
     | <NOT> t=Fact() {t = new ASTNot(t);  }
     | <IF> t=BA() <LBRA> e1=Let() <RBRA> <ELSE> <LBRA> e2=Let() <RBRA> { t = new ASTIf(t, e1, e2); }
     | <WHILE> t=BA() <LBRA> body=Let() <RBRA> { t = new ASTWhile(t, body); }
-    | <FN> n=<Id> <COLON> at = Type(){ List<String> parameters = new ArrayList<String>(); parameters.add(n.image);}
-      	   	  (<COMMA> n = <Id> <COLON> at = Type() {parameters.add(n.image);})*
-		  <ARROW> <LBRA> e2 = Let() <RBRA> { t = new ASTFun(parameters, e2); }
+    | <FN> n=<Id> <COLON> at = Type(){t = new ASTFun(n.image, null); e1 = t}
+      	   	  (<COMMA> n = <Id> <COLON> at = Type() {e2 = new ASTFun(n.image, null);
+              ((ASTFun)e1).setBody(e2); e2 = e1; })*
+		  <ARROW> <LBRA> e2 = Let() <RBRA> { ((ASTFun)e1).setBody(e2); }
     | <MATCH> t=Let() <LBRA> <NIL> <SARROW> e1=Let()
     <BAR> n=<Id> <CONS> m=<Id> <SARROW> e2=Let() <RBRA> 
         { t = new ASTMatch(t, e1, n.image, m.image, e2); }
