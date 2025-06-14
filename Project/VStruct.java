@@ -1,10 +1,10 @@
 import java.util.HashMap;
 import java.util.Map;
 
-public class VRecord implements IValue {
+public class VStruct implements IValue {
     private HashMap<String, IValue> fields;
 
-    public VRecord(HashMap<String, IValue> fields0) {
+    public VStruct(HashMap<String, IValue> fields0) {
         fields = fields0;
     }
 

@@ -1,8 +1,8 @@
-public class VVariant implements IValue {
+public class VUnion implements IValue {
     private String label;
     private IValue value;
 
-    public VVariant(String label, IValue value) {
+    public VUnion(String label, IValue value) {
         this.label = label;
         this.value = value;
     }
@@ -12,6 +12,9 @@ public class VVariant implements IValue {
 
     @Override
     public String toStr() {
+        if (value instanceof VUnit) {
+            return label + "()";
+        }
         return label + "(" + value.toStr() + ")";
     }
 }

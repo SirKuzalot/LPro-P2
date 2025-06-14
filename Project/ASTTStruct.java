@@ -7,7 +7,7 @@ public class ASTTStruct implements ASTType {
     }
     
     public String toStr() {
-        return "union { ... }";
+        return "struct { ... }";
     }
 
 }

@@ -4,8 +4,12 @@ public class ASTPlus implements ASTNode {
 
         public IValue eval(Environment<IValue> e) throws InterpreterError {
                 IValue v1 = lhs.eval(e);
+                IValue v2 = rhs.eval(e);
+
+                if (v1 instanceof VString || v2 instanceof VString) {
+                        return new VString(v1.toStr() + v2.toStr());
+                }
                 if (v1 instanceof VInt) {
-                        IValue v2 = rhs.eval(e);
                         if(v2 instanceof VInt) {
                                 int i1 = ((VInt) v1).getval();
                                 int i2 = ((VInt) v2).getval();

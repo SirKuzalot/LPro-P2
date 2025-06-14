@@ -18,7 +18,10 @@ public class VFun implements IValue {
 
         newEnv.assoc(parameter, args);
 
-        return body.eval(newEnv);
+        IValue result = body.eval(newEnv);
+
+        newEnv.endScope();
+        return result;
     }
 
     public String toStr() {

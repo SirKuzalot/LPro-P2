@@ -1,10 +1,10 @@
 import java.util.HashMap;
 import java.util.Map;
 
-public class ASTRecord implements ASTNode {
+public class ASTStruct implements ASTNode {
     private HashMap<String, ASTNode> fields;
 
-    public ASTRecord(HashMap<String, ASTNode> fields0) {
+    public ASTStruct(HashMap<String, ASTNode> fields0) {
         fields = fields0;
     }
 
@@ -18,6 +18,6 @@ public class ASTRecord implements ASTNode {
         for (Map.Entry<String, ASTNode> entry : fields.entrySet()) {
             evaluatedFields.put(entry.getKey(), entry.getValue().eval(env));
         }
-        return new VRecord(evaluatedFields);
+        return new VStruct(evaluatedFields);
     }
 }

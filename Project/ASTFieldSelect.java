@@ -11,10 +11,10 @@ public class ASTFieldSelect implements ASTNode {
 
     public IValue eval(Environment<IValue> env) throws InterpreterError {
         IValue recVal = record.eval(env);
-        if (!(recVal instanceof VRecord)) {
+        if (!(recVal instanceof VStruct)) {
             throw new InterpreterError("Field select on non-record value");
         }
-        VRecord vrec = (VRecord) recVal;
+        VStruct vrec = (VStruct) recVal;
         IValue val = vrec.get(field);
         if (val == null) {
             throw new InterpreterError("Field '" + field + "' not found in record");
