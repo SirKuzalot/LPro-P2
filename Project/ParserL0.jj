@@ -262,6 +262,7 @@ ASTNode Term() :
       | (
         op=<STAR> t2 = Fact() { t1 = new ASTMult(t1,t2); }
       | op=<DIV> t2 = Fact() { t1 = new ASTDiv(t1,t2); }
+      | op = <UNIT> {t1 = new ASTApp(t1, new ASTUnit()); }
       | op = <LPAR> t2 = Exp () <RPAR> { t1 = new ASTApp(t1, t2); }
     )*
     ) { return t1; }
