@@ -13,27 +13,8 @@ public class ASTSeqExp implements ASTNode {
 
         if (v1 instanceof VBox) {
             IValue v = n2.eval(e);
-            if (v instanceof VInt) {
-                ((VBox)v1).setval((VInt) v);
-                return v;
-            } else if (v instanceof VBool) {
-                ((VBox)v1).setval((VBool) v);
-                return v;
-            } else if (v instanceof VFun) {
-                ((VBox)v1).setval((VFun) v);
-                return v;
-            } else if (v instanceof VBox) {
-                ((VBox)v1).setval((VBox) v);
-                return v;
-            } else if (v instanceof VCons) {
-                ((VBox)v1).setval((VCons) v);
-                return v;
-            } else if (v instanceof VLazyCons) {
-                ((VBox)v1).setval((VLazyCons) v);
-                return v;
-            } else {
-                throw new InterpreterError("Attempting to set an invalid value in a box");
-            }
+            ((VBox)v1).setval(v);
+            return v1; 
         } else {
             throw new InterpreterError("Attempting to set a non-box value");
         }

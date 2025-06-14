@@ -644,9 +644,8 @@ let mknode:int->BTREE =
 let insert: RTREE->int->() = 
     fn t:RTREE, n:int =>
     {
-        match !t {
-            #nil(_) -> 
-                t := mknode (n); ()
+        match *t {
+            #nil(_) -> t := mknode (n); ()
         |   #node(c) ->
             if (n<c.#val)
                 { insert (c.#left) (n) }
@@ -657,7 +656,7 @@ let insert: RTREE->int->() =
 let inorder: RTREE->() = 
     fn t:RTREE =>
     {
-        match !t {
+        match *t {
             #nil(_) ->  ()
         |   #node(c) ->
             inorder (c.#left);
@@ -704,7 +703,7 @@ let mknode:int->BTREE =
 let insert: RTREE->int->() = 
     fn t:RTREE, n:int =>
     {
-        match !t {
+        match *t {
             #nil(_) -> 
                 t := mknode (n); ()
         |   #node(c) ->
@@ -717,7 +716,7 @@ let insert: RTREE->int->() =
 let treeiterator: RTREE->(int->())->() = 
     fn t:RTREE,f:int->() =>
     {
-        match !t {
+        match *t {
             #nil(_) ->  ()
         |   #node(c) ->
             treeiterator (c.#left) (f);

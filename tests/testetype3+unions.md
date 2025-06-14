@@ -531,7 +531,7 @@ area(r1);;
 type Circle = struct { #cx:int, #cy:int, #rad:int };
 type Rectangle = struct { #h:int, #w:int };
 type Blob = union { #circle: Circle, #rect: Rectangle };
-let pi = 3; /*3.14*/
+let pi = 3; 
 let area = fn b:Blob => {
   match b {
         #circle(c) -> let r = pi*c.#rad; (r*r)/2

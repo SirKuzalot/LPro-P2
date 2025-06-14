@@ -122,7 +122,7 @@ TOKEN :
   |
   < Label: "#" (["a"-"z","A"-"Z"])+ >
   |
-  < Id: ["a"-"z","A"-"Z","_"] ( ["a"-"z","A"-"Z","0"-"9"] )* >
+  < Id: ["a"-"z","A"-"Z","_"] ( ["a"-"z","A"-"Z","0"-"9","_"] )* >
   |
   < Num: (["0"-"9"]) + >
 }
@@ -296,10 +296,10 @@ ASTNode Fact() :
              	  (<COMMA> n = <Id> <COLON> at = Type() {e2 = new ASTFun(n.image, null);
               ((ASTFun)e1).setBody(e2); e1 = e2; })*
           <ARROW> <LBRA> e2 = Let() <RBRA> { ((ASTFun)e1).setBody(e2); }
-    | LOOKAHEAD(4) <MATCH> t=Let() <LBRA> <NIL> <SARROW> e1=Let()
+    | LOOKAHEAD(5) <MATCH> t=Let() <LBRA> <NIL> <SARROW> e1=Let()
       <BAR> n=<Id> <CONS> m=<Id> <SARROW> e2=Let() <RBRA> 
         { t = new ASTMatch(t, e1, n.image, m.image, e2); }
-    | LOOKAHEAD(4) <MATCH> t = Let() <LBRA>
+    | <MATCH> t = Let() <LBRA>
       n = <Label> <LPAR> m = <Id> <RPAR> <SARROW> e1=Let()
       {
         ArrayList<String> labels = new ArrayList<String>();
