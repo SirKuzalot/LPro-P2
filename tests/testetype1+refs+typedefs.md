@@ -44,7 +44,7 @@ if (y) { 1 } else { x > 1 };;
 
 let x = 1;
 let y = (x > 2);
-if (y) { x != 1 } else { y };;
+if (y) { x ~= 1 } else { y };;
 
 (let x = 1; (x + 1)) * (let x = 2; (x + 3));;
 
@@ -191,11 +191,11 @@ let L = 1000;
 let m = box(L);
 let S = box(c);
 (
-while (!m>0) {
-    m := !m - 1;
-    S := !S + !m
+while (*m>0) {
+    m := *m - 1;
+    S := *S + *m
 };
-!S
+*S
 )
 ;;
 
@@ -204,7 +204,7 @@ type i2i = int->int;
 let sigfpe:ref<int->int> = box ( fn x:int => {x} );
 let setfpe = fn h:int->int => { sigfpe := h };
 let div = fn n:int,m:int => {
-      if (m==0) { (!sigfpe) (n) }
+      if (m==0) { (*sigfpe) (n) }
         else { n / m}
 };
 setfpe (fn v:int => { -1 });
@@ -217,7 +217,7 @@ type refi2i = ref<i2i>;
 let sigfpe:refi2i = box ( fn x:int => {x} );
 let setfpe = fn h:i2i => { sigfpe := h };
 let div = fn n:int,m:int => {
-      if (m==0) { (!sigfpe) (n) }
+      if (m==0) { (*sigfpe) (n) }
         else { n / m}
 };
 setfpe (fn v:int => { -1 });
@@ -229,7 +229,7 @@ div (2) (0)
 let knot = box (fn x:int => {x});
 let fact = fn n:int => {
       if (n==0) { 1}
-        else { n * ((!knot)( n - 1 ))}};
+        else { n * ((*knot)( n - 1 ))}};
 knot := fact;
 fact (6)
 ;;
@@ -245,7 +245,7 @@ type knott = ref<int->int>;
 let knot:knott = box (fn x:int => {x});
 let fact = fn n:int => {
       if (n==0) { 1}
-        else { n * ((!knot)( n - 1 ))}};
+        else { n * ((*knot)( n - 1 ))}};
 knot := fact;
 fact (6)
 ;;
@@ -265,11 +265,11 @@ let mkpair =
 };
 let getfst:Igettype =
     fn p:Iaccessor->int =>
-        { p (fn a:ref<int>,b:ref<int> => { !a }) };
+        { p (fn a:ref<int>,b:ref<int> => { *a }) };
 
 let getsnd:Igettype =
     fn p:Iaccessor->int =>
-        { p (fn a:ref<int>,b:ref<int> => { !b })};
+        { p (fn a:ref<int>,b:ref<int> => { *b })};
 
 let setfst:Isettype  =
     fn p:Iaccessor->int,v:int =>
@@ -286,7 +286,7 @@ let x = mkpair (1) (2);
 ;;
 
 
-let inc = fn r:ref<int>,z:int->int => { r := z(!r + 1); !r};
+let inc = fn r:ref<int>,z:int->int => { r := z(*r + 1); *r};
 let age = box (1);
 inc (age) (fn x:int => { x + 1 })
 ;;

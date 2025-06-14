@@ -146,7 +146,7 @@ ASTNode Let() :
     (
       (
         (
-          <LET> n=<Id> <EQUAL> e1 = BA() <SEMIC>
+          <LET> n=<Id> [<COLON> t1 = Type()] <EQUAL> e1 = BA() <SEMIC>
           { decls.add(new Bind(n.image, e1)); }
         )
       | (
@@ -235,18 +235,21 @@ ASTNode Exp() :
 
 ASTNode RecordTerm() :
 {
-    Token label;
+    Token lbl;
     ASTNode value;
     HashMap<String, ASTNode> fields = new HashMap<String, ASTNode>();
+    ASTNode t;
 }
 {
     <LBRA>
-    label = <Label> <EQUAL> value = Term() { fields.put(label.image, value); }
-    ( <COMMA> label = <Label> <EQUAL> value = Term() { fields.put(label.image, value); } )*
+    (
+        lbl = <Label> <EQUAL> value = Term() { fields.put(lbl.image, value); }
+        ( <COMMA> lbl = <Label> <EQUAL> value = Term() { fields.put(lbl.image, value); } )*
+    )?
     <RBRA>
-    { return new ASTStruct(fields); }
+    { t = new ASTStruct(fields); }
+    { return t; }
 }
-
 ASTNode Term() :
 {
     ASTNode t1, t2;
@@ -288,7 +291,7 @@ ASTNode Fact() :
     | <NOT> t=Fact() {t = new ASTNot(t);  }
     | <IF> t=BA() <LBRA> e1=Let() <RBRA> <ELSE> <LBRA> e2=Let() <RBRA> { t = new ASTIf(t, e1, e2); }
     | <WHILE> t=BA() <LBRA> body=Let() <RBRA> { t = new ASTWhile(t, body); }
-    | <FN> n=<Id> <COLON> at = Type(){t = new ASTFun(n.image, null); e1 = t; }
+        | <FN> n=<Id> <COLON> at = Type(){t = new ASTFun(n.image, null); e1 = t; }
              	  (<COMMA> n = <Id> <COLON> at = Type() {e2 = new ASTFun(n.image, null);
               ((ASTFun)e1).setBody(e2); e1 = e2; })*
           <ARROW> <LBRA> e2 = Let() <RBRA> { ((ASTFun)e1).setBody(e2); }
@@ -317,12 +320,13 @@ ASTNode Fact() :
       { t = new ASTMatchUnion(t, labels, vars, bodies); }
     | <PRINT> t=Fact() { t = new ASTPrint(t);  }
     | <PRINTLN> t=Fact() { t = new ASTPrintln(t);  }
-    | <LPAR> t=Let() <RPAR> 
+    |  <LPAR> t=Let() <RPAR> 
+    | <UNIT> { t = new ASTUnit(); }
     | t = RecordTerm()
     )
     (
       LOOKAHEAD(2)
-      <DOT> n = <Id> { t = new ASTFieldSelect(t, n.image); }
+      <DOT> n = <Label> { t = new ASTFieldSelect(t, n.image); }
     )*
 
    { return t; }
@@ -368,6 +372,7 @@ ASTType TypeF() :
         | <LIST> <LT> t=Type() <GT> { t = new ASTTList(t); }
         | <STRUCT> <LBRA> ll = LabelList() <RBRA> { t = new ASTTStruct(ll);}
         | <UNION> <LBRA> ll = LabelList() <RBRA> { t = new ASTTUnion(ll);}
+        | <LPAR> t=Type() <RPAR>
     )
     { return t; }
 }

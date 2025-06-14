@@ -323,9 +323,9 @@ p0.#name + p0.#age;;
 
 type MPair = struct { #fst: ref<int>, #snd:ref<int>};
 let p1 = { #fst = box(1), #snd = box(2)};
-p1.#fst := !(p1.#snd);
-p1.#snd := !(p1.#snd) + 1;
-!(p1.#fst) + !(p1.#snd)
+p1.#fst := *(p1.#snd);
+p1.#snd := *(p1.#snd) + 1;
+*(p1.#fst) + *(p1.#snd)
 ;;
 
 ();;
@@ -335,8 +335,8 @@ p1.#snd := !(p1.#snd) + 1;
 type ICounter = struct { #inc: () -> int, #get : () -> int };
 let c:int -> ICounter =
     fn n:int => { let v = box(n);
-                { #inc = fn _:() => { v := !v + 1 }, 
-                  #get = fn _:() => { !v } }};
+                { #inc = fn _:() => { v := *v + 1 }, 
+                  #get = fn _:() => { *v } }};
 let cv = c(0);
 cv.#inc(());
 cv.#inc(());
@@ -349,8 +349,8 @@ let newcounter:int -> ICounter =
     fn n:int =>
         { let v = box(n);
             { 
-                #inc = fn _:() => { v := !v + 1 }, 
-                #get = fn _:() => { !v }
+                #inc = fn _:() => { v := *v + 1 }, 
+                #get = fn _:() => { *v }
             }
         };
 let c0 = newcounter(0);
@@ -366,8 +366,8 @@ let newcounter:int -> ICounter =
     fn n:int =>
         { let v = box(n);
             { 
-                #inc = fn _:() => { v := !v + 1 }, 
-                #get = fn _:() => { !v }
+                #inc = fn _:() => { v := *v + 1 }, 
+                #get = fn _:() => { *v }
             }
         };
 let c0 = newcounter(0);
