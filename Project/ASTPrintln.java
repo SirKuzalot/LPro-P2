@@ -12,4 +12,9 @@ public class ASTPrintln implements ASTNode {
         return v;
     }
 
+    public ASTType typecheck(Environment<ASTType> e) throws TypeCheckError
+    {
+        return n.typecheck(e);
+    }
+
 }

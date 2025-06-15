@@ -12,5 +12,12 @@ public class ASTSeq implements ASTNode {
         n1.eval(e);
         return n2.eval(e);
     }
+
+    public ASTType typecheck(Environment<ASTType> e) throws TypeCheckError
+    {
+        ASTType t = n1.typecheck(e);
+        t = n2.typecheck(e);
+        return t;
+    }
     
 }

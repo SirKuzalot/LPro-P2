@@ -11,5 +11,11 @@ public class ASTBox implements ASTNode {
         return new VBox(v);
     }
 
+    public ASTType typecheck(Environment<ASTType> e) throws TypeCheckError
+    {
+        ASTType t = n1.typecheck(e);
+        return new ASTTRef(t);
+    }
+
     
 }

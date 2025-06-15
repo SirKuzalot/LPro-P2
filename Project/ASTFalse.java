@@ -5,8 +5,12 @@ public class ASTFalse implements ASTNode  {
 
     public IValue eval(Environment<IValue> e) throws InterpreterError
     {
-        // Returns a VBool object representing the boolean value false.
         return new VBool(false);                
+    }
+
+    public ASTType typecheck(Environment<ASTType> e) throws TypeCheckError
+    {
+        return new ASTTBool(); 
     }
     
 }

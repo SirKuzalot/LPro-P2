@@ -6,4 +6,12 @@ public class ASTTString implements ASTType {
         return "string";
     }
 
+    public boolean isSubtypeOf(ASTType other, Environment<ASTType> e) {
+        return other instanceof ASTTString;
+    }
+
+    public ASTType simplify(Environment<ASTType> e) throws InterpreterError {
+        return this; 
+    }
+
 }

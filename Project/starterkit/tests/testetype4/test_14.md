@@ -1,0 +1,4 @@
+let y = 1;
+let b = (y > 0) && (y <= 20);
+let z = (let z = 2*y;  z*z);
+b || ~ (z < 0);;

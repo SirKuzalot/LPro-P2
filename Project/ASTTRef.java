@@ -13,4 +13,18 @@ public class ASTTRef implements ASTType {
         return "ref<"+type.toStr()+">";
     }
 
+    public boolean isSubtypeOf(ASTType other, Environment<ASTType> e) {
+        if (other instanceof ASTTRef) {
+            ASTTRef otherRef = (ASTTRef) other;
+            return type.isSubtypeOf(otherRef.getType(), e) && 
+                   otherRef.getType().isSubtypeOf(type, e);
+        }
+        return false;
+    }
+
+    public ASTType simplify(Environment<ASTType> e) throws InterpreterError {
+        ASTType simplifiedType = type.simplify(e);
+        return new ASTTRef(simplifiedType);
+    }
+
 }

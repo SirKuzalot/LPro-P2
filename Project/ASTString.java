@@ -9,4 +9,8 @@ public class ASTString implements ASTNode {
     public IValue eval(Environment<IValue> env) throws InterpreterError {
         return new VString(value);
     }
+
+    public ASTType typecheck(Environment<ASTType> env) throws TypeCheckError {
+        return new ASTTString();
+    }
 }

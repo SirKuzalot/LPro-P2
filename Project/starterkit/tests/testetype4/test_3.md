@@ -1,0 +1,4 @@
+/* fails */
+let x = 1;
+let y = true;
+(x>3 && x>y);;

@@ -5,9 +5,59 @@ public class ASTTUnion implements ASTType {
     public ASTTUnion(TypeBindList llp) {
         ll = llp;
     }
+
+    public TypeBindList getTypeBindList() {
+        return ll;
+    }
+
+    public ASTType getFieldType(String fieldName) {
+        return ll.getType(fieldName);
+    }
     
     public String toStr() {
-        return "union { ... }";
+        StringBuilder sb = new StringBuilder();
+        sb.append("union { ");
+        for (String label : ll.getLabels()) {
+            sb.append(label).append(": ").append(ll.getType(label).toStr()).append("; ");
+        }
+        sb.append("}");
+        return sb.toString();
+    }
+
+    public boolean isSubtypeOf(ASTType other, Environment<ASTType> e) {
+        if (other instanceof ASTTUnion) {
+            ASTTUnion otherUnion = (ASTTUnion) other;
+            TypeBindList otherFields = otherUnion.getTypeBindList();
+            TypeBindList thisFields = this.getTypeBindList();
+
+            for (String field : thisFields.getLabels()) {
+                ASTType otherFieldType = otherFields.getType(field);
+                if (otherFieldType == null) {
+                    return false;
+                }
+            }
+
+            for (String field : thisFields.getLabels()) {
+                ASTType thisFieldType = thisFields.getType(field);
+                ASTType otherFieldType = otherFields.getType(field);
+                if (!otherFieldType.isSubtypeOf(thisFieldType, e)) {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        return false;
+    }
+
+    public ASTType simplify(Environment<ASTType> e) throws InterpreterError {
+        for (String field : ll.getLabels()) {
+            ASTType fieldType = ll.getType(field);
+            ASTType simplifiedFieldType = fieldType.simplify(e);
+            ll.setType(field, simplifiedFieldType);
+        }
+
+        return this;
     }
 
 }

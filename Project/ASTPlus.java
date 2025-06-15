@@ -25,4 +25,20 @@ public class ASTPlus implements ASTNode {
                 rhs = r;
         }
 
+        public ASTType typecheck(Environment<ASTType> e) throws TypeCheckError {
+                ASTType t1 = lhs.typecheck(e);
+                ASTType t2 = rhs.typecheck(e);
+
+                if (t1 instanceof ASTTString || t2 instanceof ASTTString) {
+                        return new ASTTString();
+                }
+                if (!(t1 instanceof ASTTInt)) {
+                        throw new TypeCheckError("left operand of + must be an int or string, found " + t1);
+                }
+                if (!(t2 instanceof ASTTInt)) {
+                        throw new TypeCheckError("right operand of + must be an int or string, found " + t2);
+                }
+                return new ASTTInt();
+        }
+
 }

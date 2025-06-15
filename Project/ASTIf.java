@@ -11,13 +11,27 @@ public class ASTIf implements ASTNode {
 
     public IValue eval(Environment<IValue> e) throws InterpreterError {
         VBool b = (VBool) cond.eval(e);
-        if (!(b instanceof VBool)) {
-            throw new InterpreterError("Condition must evaluate to a boolean");
-        }
         if (b.getval()) {
             return thenn.eval(e);
         } else {
             return elsee.eval(e);
+        }
+    }
+
+    public ASTType typecheck(Environment<ASTType> e) throws TypeCheckError {
+        ASTType tcond = cond.typecheck(e);
+        if (!(tcond instanceof ASTTBool)) {
+            throw new TypeCheckError("Condition of if must be a boolean, found " + tcond);
+        }
+        ASTType tthen = thenn.typecheck(e);
+        ASTType telse = elsee.typecheck(e);
+
+        if (tthen.isSubtypeOf(telse, e)) {
+            return telse;
+        } else if (telse.isSubtypeOf(tthen, e)) {
+            return tthen;
+        } else {
+            throw new TypeCheckError("Branches of if must have compatible types: " + tthen.toStr() + " and " + telse.toStr());
         }
     }
     

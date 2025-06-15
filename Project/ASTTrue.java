@@ -5,8 +5,14 @@ public class ASTTrue implements ASTNode  {
 
     public IValue eval(Environment<IValue> e) throws InterpreterError
     {
-        // Returns a new VBool object with the value true.
         return new VBool(true);                
     }
+
+    public ASTType typecheck(Environment<ASTType> e) throws TypeCheckError
+    {
+        return new ASTTBool(); 
+    }
+
+    
     
 }

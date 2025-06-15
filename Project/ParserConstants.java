@@ -9,116 +9,118 @@ public interface ParserConstants {
   /** End of File. */
   int EOF = 0;
   /** RegularExpression Id. */
-  int NIL = 5;
+  int NIL = 8;
   /** RegularExpression Id. */
-  int CONS = 6;
+  int CONS = 9;
   /** RegularExpression Id. */
-  int LAZYCONS = 7;
+  int LAZYCONS = 10;
   /** RegularExpression Id. */
-  int MATCH = 8;
+  int MATCH = 11;
   /** RegularExpression Id. */
-  int BAR = 9;
+  int BAR = 12;
   /** RegularExpression Id. */
-  int SARROW = 10;
+  int SARROW = 13;
   /** RegularExpression Id. */
-  int LET = 11;
+  int LET = 14;
   /** RegularExpression Id. */
-  int TYPE = 12;
+  int TYPE = 15;
   /** RegularExpression Id. */
-  int TRUE = 13;
+  int TRUE = 16;
   /** RegularExpression Id. */
-  int FALSE = 14;
+  int FALSE = 17;
   /** RegularExpression Id. */
-  int PLUS = 15;
+  int PLUS = 18;
   /** RegularExpression Id. */
-  int MINUS = 16;
+  int MINUS = 19;
   /** RegularExpression Id. */
-  int STAR = 17;
+  int STAR = 20;
   /** RegularExpression Id. */
-  int DIV = 18;
+  int DIV = 21;
   /** RegularExpression Id. */
-  int LPAR = 19;
+  int LPAR = 22;
   /** RegularExpression Id. */
-  int RPAR = 20;
+  int RPAR = 23;
   /** RegularExpression Id. */
-  int LBRA = 21;
+  int LBRA = 24;
   /** RegularExpression Id. */
-  int RBRA = 22;
+  int RBRA = 25;
   /** RegularExpression Id. */
-  int EQUAL = 23;
+  int EQUAL = 26;
   /** RegularExpression Id. */
-  int DOT = 24;
+  int DOT = 27;
   /** RegularExpression Id. */
-  int COLON = 25;
+  int COLON = 28;
   /** RegularExpression Id. */
-  int SEMIC = 26;
+  int SEMIC = 29;
   /** RegularExpression Id. */
-  int TERM = 27;
+  int TERM = 30;
   /** RegularExpression Id. */
-  int COMMA = 28;
+  int COMMA = 31;
   /** RegularExpression Id. */
-  int AND = 29;
+  int AND = 32;
   /** RegularExpression Id. */
-  int OR = 30;
+  int OR = 33;
   /** RegularExpression Id. */
-  int EQ = 31;
+  int EQ = 34;
   /** RegularExpression Id. */
-  int GT = 32;
+  int GT = 35;
   /** RegularExpression Id. */
-  int LT = 33;
+  int LT = 36;
   /** RegularExpression Id. */
-  int GTEQ = 34;
+  int GTEQ = 37;
   /** RegularExpression Id. */
-  int LTEQ = 35;
+  int LTEQ = 38;
   /** RegularExpression Id. */
-  int DIF = 36;
+  int DIF = 39;
   /** RegularExpression Id. */
-  int NOT = 37;
+  int NOT = 40;
   /** RegularExpression Id. */
-  int ASSIGN = 38;
+  int ASSIGN = 41;
   /** RegularExpression Id. */
-  int BOX = 39;
+  int BOX = 42;
   /** RegularExpression Id. */
-  int IF = 40;
+  int IF = 43;
   /** RegularExpression Id. */
-  int ELSE = 41;
+  int ELSE = 44;
   /** RegularExpression Id. */
-  int WHILE = 42;
+  int WHILE = 45;
   /** RegularExpression Id. */
-  int PRINT = 43;
+  int PRINT = 46;
   /** RegularExpression Id. */
-  int PRINTLN = 44;
+  int PRINTLN = 47;
   /** RegularExpression Id. */
-  int FN = 45;
+  int FN = 48;
   /** RegularExpression Id. */
-  int ARROW = 46;
+  int ARROW = 49;
   /** RegularExpression Id. */
-  int INT = 47;
+  int INT = 50;
   /** RegularExpression Id. */
-  int UNIT = 48;
+  int UNIT = 51;
   /** RegularExpression Id. */
-  int BOOL = 49;
+  int BOOL = 52;
   /** RegularExpression Id. */
-  int STRING = 50;
+  int STRING = 53;
   /** RegularExpression Id. */
-  int LIST = 51;
+  int LIST = 54;
   /** RegularExpression Id. */
-  int REF = 52;
+  int REF = 55;
   /** RegularExpression Id. */
-  int UNION = 53;
+  int UNION = 56;
   /** RegularExpression Id. */
-  int STRUCT = 54;
+  int STRUCT = 57;
   /** RegularExpression Id. */
-  int String = 55;
+  int String = 58;
   /** RegularExpression Id. */
-  int Label = 56;
+  int Label = 59;
   /** RegularExpression Id. */
-  int Id = 57;
+  int Id = 60;
   /** RegularExpression Id. */
-  int Num = 58;
+  int Num = 61;
 
   /** Lexical state. */
   int DEFAULT = 0;
+  /** Lexical state. */
+  int IN_COMMENT = 1;
 
   /** Literal token values. */
   String[] tokenImage = {
@@ -127,6 +129,9 @@ public interface ParserConstants {
     "\"\\t\"",
     "\"\\r\"",
     "\"\\n\"",
+    "\"/*\"",
+    "<token of kind 6>",
+    "\"*/\"",
     "\"nil\"",
     "\"::\"",
     "\":?\"",

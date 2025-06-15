@@ -1,0 +1,7 @@
+let comp = fn f:int->int, g:int->int => 
+        { fn x:int =>
+        { f (g (x)) }};
+let inc = fn x:int => { x + 1};
+let dup = fn x:int => { 2 * x};
+let c2 = comp (inc) (dup);
+c2 (99);;

@@ -36,5 +36,19 @@ public class ASTComp implements ASTNode {
             throw new InterpreterError("Invalid types for comparison");
         }
     }
+
+    public ASTType typecheck(Environment<ASTType> e) throws TypeCheckError {
+        ASTType lt = left.typecheck(e);
+        ASTType rt = right.typecheck(e);
+
+        if (!(lt instanceof ASTTInt)) {
+            throw new TypeCheckError("Left operand must be of type int, but got " + lt.toStr());
+        }
+        if (!(rt instanceof ASTTInt)) {
+            throw new TypeCheckError("Right operand must be of type int, but got " + rt.toStr());
+        }
+
+        return new ASTTBool(); 
+    }
     
 }

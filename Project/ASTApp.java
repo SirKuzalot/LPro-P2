@@ -12,11 +12,29 @@ public class ASTApp implements ASTNode {
         IValue v1 = n1.eval(e);
         IValue v2 = n2.eval(e);
 
-        if (v1 instanceof VFun) {
-            return ((VFun)v1).apply(v2);
-        } else {
-            throw new InterpreterError("Not a function");
+        return ((VFun)v1).apply(v2);
+
+    }
+
+    public ASTType typecheck(Environment<ASTType> e) throws TypeCheckError
+    {
+        ASTType t1 = n1.typecheck(e);
+        ASTType t2 = n2.typecheck(e);
+
+        if (!(t1 instanceof ASTTArrow)) {
+            throw new TypeCheckError("Expected a function type, but got " + t1);
         }
+
+        ASTTArrow funType = (ASTTArrow) t1;
+        ASTType argType = funType.getDom();
+
+        if (!(t2.isSubtypeOf(argType, e))) {
+            throw new TypeCheckError("Argument type " + t2.toStr() + " is not a subtype of " + argType.toStr());
+        }
+
+        return funType.getCodom();
+
+        
     }
     
 }

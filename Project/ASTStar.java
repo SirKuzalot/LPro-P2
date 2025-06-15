@@ -15,5 +15,17 @@ public class ASTStar implements ASTNode {
             throw new InterpreterError("Unboxing only works for boxed values");
         }
     }
+
+    public ASTType typecheck(Environment<ASTType> e) throws TypeCheckError
+    {
+        ASTType t1 = n1.typecheck(e);
+
+        if (!(t1 instanceof ASTTRef)) {
+            throw new TypeCheckError("Expected a box type, but got " + t1.toStr());
+        }
+
+        ASTTRef boxType = (ASTTRef) t1;
+        return boxType.getType();
+    }
     
 }

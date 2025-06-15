@@ -1,0 +1,4 @@
+let x = 2;
+let z = x+2;
+let k = (let x = z+2; x*x);
+k+k;;

@@ -8,13 +8,17 @@ public class ASTNot implements ASTNode  {
 
     public IValue eval(Environment<IValue> e) throws InterpreterError
     {
-        // Evaluates the expression and returns a VBool object representing the negation of the boolean value.
         IValue v = n.eval(e);
-        if (v instanceof VBool) {
-            return new VBool(!((VBool)v).getval());
-        } else {
-            throw new InterpreterError("Not operator applied to non-boolean value");
+        return new VBool(!((VBool)v).getval());
+    }
+
+    public ASTType typecheck(Environment<ASTType> e) throws TypeCheckError
+    {
+        ASTType t = n.typecheck(e);
+        if (!(t instanceof ASTTBool)) {
+            throw new TypeCheckError("Not operator requires a boolean operand, found: " + t.toStr());
         }
+        return new ASTTBool(); 
     }
     
 }

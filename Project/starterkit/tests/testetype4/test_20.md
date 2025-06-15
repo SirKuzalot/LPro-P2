@@ -1,0 +1,2 @@
+let f = fn g:int->int,z:int => { g (z) };
+f (fn z:int => { z*2 }) (7);;

@@ -35,4 +35,32 @@ public class ASTMatch implements ASTNode {
             throw new InterpreterError("Match on non-list value");
         }
     }
+
+    public ASTType typecheck(Environment<ASTType> e) throws TypeCheckError {
+        ASTType exprType = expr.typecheck(e);
+        if (!(exprType instanceof ASTTList)) {
+            throw new TypeCheckError("Match expression must be a list, found: " + exprType.toStr());
+        }
+        ASTTList listType = (ASTTList) exprType;
+        ASTType nilType = nilCase.typecheck(e);
+
+        Environment<ASTType> env = e.beginScope();
+        try {
+            env.assoc(headId, listType.getElementType());
+            env.assoc(tailId, listType);
+        } catch (InterpreterError ex) {
+            throw new TypeCheckError("Error associating identifiers in match: " + ex.getMessage());
+        }
+
+        ASTType consType = consCase.typecheck(env);
+
+        if (nilType.isSubtypeOf(consType, env)) {
+            return consType;
+        } else if (consType.isSubtypeOf(nilType, env)) {
+            return nilType;
+        } else {
+            throw new TypeCheckError("Types of nil case and cons case do not match: " + nilType.toStr() + " and " + consType.toStr());
+        }
+
+    }
 }

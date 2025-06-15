@@ -11,13 +11,29 @@ public class ASTSeqExp implements ASTNode {
     {
         IValue v1 = n1.eval(e);
 
-        if (v1 instanceof VBox) {
-            IValue v = n2.eval(e);
-            ((VBox)v1).setval(v);
-            return v1; 
-        } else {
-            throw new InterpreterError("Attempting to set a non-box value");
+        IValue v = n2.eval(e);
+        ((VBox)v1).setval(v);
+        return v1; 
+
+    }
+
+    public ASTType typecheck(Environment<ASTType> e) throws TypeCheckError
+    {
+        ASTType t1 = n1.typecheck(e);
+        ASTType t2 = n2.typecheck(e);
+
+        if (!(t1 instanceof ASTTRef)) {
+            throw new TypeCheckError("Expected a box type, but got " + t1);
         }
+
+
+        ASTTRef boxType = (ASTTRef) t1;
+
+        if (!(t2.isSubtypeOf(boxType.getType(), e))) {
+            throw new TypeCheckError("Value type " + t2.toStr() + " is not a subtype of " + boxType.getType().toStr());
+        }
+
+        return t2;
     }
     
 }

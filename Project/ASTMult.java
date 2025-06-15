@@ -19,4 +19,19 @@ public class ASTMult implements ASTNode {
                 rhs = r;
         }
 
+        public ASTType typecheck(Environment<ASTType> e) throws TypeCheckError {
+                ASTType t1 = lhs.typecheck(e);
+
+                ASTType t2 = rhs.typecheck(e);
+
+
+                if (!(t1 instanceof ASTTInt)) {
+                        throw new TypeCheckError("left operand of * must be an int, found " + t1.toStr());
+                }
+                if (!(t2 instanceof ASTTInt)) {
+                        throw new TypeCheckError("right operand of * must be an int, found " + t2.toStr());
+                }
+                return new ASTTInt();
+        }
+
 }
