@@ -85,36 +85,79 @@ public class ASTMatchUnion implements ASTNode {
             }
         }
 
-        for (int i = 0; i < bodyTypes.size(); i++) {
-            if (!(bodyTypes.get(i) instanceof ASTTUnion)) {
-                throw new TypeCheckError("No common supertype found for match bodies");
-            }
-        }
 
-        HashMap<String, ASTType> labelTypes = new HashMap<>();
-        for (ASTType bodyType : bodyTypes) {
-            ASTTUnion unionBodyType = (ASTTUnion) bodyType;
-            TypeBindList bodyFieldTypes = unionBodyType.getTypeBindList();
-            for (String label : bodyFieldTypes.getLabels()) {
-                ASTType type = bodyFieldTypes.getType(label);
-                if (labelTypes.containsKey(label)) {
-                    ASTType existingType = labelTypes.get(label);
-                    if (existingType.isSubtypeOf(type, env)) {
-                        labelTypes.put(label, type);
-                    } else if (type.isSubtypeOf(existingType, env)) {
-                        // Do nothing, existingType is already a supertype
-                    } else {
-                        throw new TypeCheckError("Branches of match must be subtypes of each other for label " + label + ", found " + existingType.toStr() + " and " + type.toStr());
-                    }
-                } else {
-                    labelTypes.put(label, type);
+        if (bodyTypes.get(0) instanceof ASTTUnion) {
+            for (int i = 0; i < bodyTypes.size(); i++) {
+                if (!(bodyTypes.get(i) instanceof ASTTUnion)) {
+                    throw new TypeCheckError("No common supertype found for match bodies");
                 }
             }
 
+            HashMap<String, ASTType> labelTypes = new HashMap<>();
+            for (ASTType bodyType : bodyTypes) {
+                ASTTUnion unionBodyType = (ASTTUnion) bodyType;
+                TypeBindList bodyFieldTypes = unionBodyType.getTypeBindList();
+                for (String label : bodyFieldTypes.getLabels()) {
+                    ASTType type = bodyFieldTypes.getType(label);
+                    if (labelTypes.containsKey(label)) {
+                        ASTType existingType = labelTypes.get(label);
+                        if (existingType.isSubtypeOf(type, env)) {
+                            labelTypes.put(label, type);
+                        } else if (type.isSubtypeOf(existingType, env)) {
+                            // Do nothing, existingType is already a supertype
+                        } else {
+                            throw new TypeCheckError("Branches of match must be subtypes of each other for label " + label + ", found " + existingType.toStr() + " and " + type.toStr());
+                        }
+                    } else {
+                        labelTypes.put(label, type);
+                    }
+                }
+            }
             return new ASTTUnion(new TypeBindList(labelTypes));
-        }
 
-        throw new TypeCheckError("No common supertype found for match bodies");
+        } else if (bodyTypes.get(0) instanceof ASTTStruct) {
+            for (int i = 1; i < bodyTypes.size(); i++) {
+                if (!(bodyTypes.get(i) instanceof ASTTStruct)) {
+                    throw new TypeCheckError("No common supertype found for match bodies");
+                }
+            }
+
+            ASTTStruct firstBodyType = (ASTTStruct) bodyTypes.get(0);
+            HashMap<String, ASTType> currentFields = new HashMap<>();
+
+            for (String label : firstBodyType.getLabels()) {
+                ASTType type = firstBodyType.getFieldType(label);
+                currentFields.put(label, type);
+            }
+
+            HashMap<String, ASTType> combinedFields = new HashMap<>();
+            for (int i = 1; i < bodyTypes.size(); i++) {
+                ASTType bodyType = bodyTypes.get(i);
+                ASTTStruct structBodyType = (ASTTStruct) bodyType;
+                TypeBindList bodyFieldTypes = structBodyType.getTypeBindList();
+                for (String label : bodyFieldTypes.getLabels()) {
+                    ASTType type = bodyFieldTypes.getType(label);
+                    if (currentFields.containsKey(label)) {
+                        ASTType existingType = currentFields.get(label);
+                        if (existingType.isSubtypeOf(type, env)) {
+                            combinedFields.put(label, type);
+                        } else if (type.isSubtypeOf(existingType, env)) {
+                            combinedFields.put(label, existingType);
+                        } else {
+                            // Do nothing, consider extra fields of supertype
+                        } 
+                    }
+                }
+
+                currentFields = combinedFields;
+                combinedFields = new HashMap<>();
+
+            }
+            return new ASTTStruct(new TypeBindList(currentFields));
+ 
+            } else {
+                throw new TypeCheckError("No common supertype found for match bodies");
+            }
 
 
 

@@ -13,6 +13,10 @@ public class ASTTStruct implements ASTType {
         return ll;
     }
 
+    public Set<String> getLabels() {
+        return new HashSet<>(ll.getLabels());
+    }
+    
     public ASTType getFieldType(String fieldName) {
         return ll.getType(fieldName);
     }

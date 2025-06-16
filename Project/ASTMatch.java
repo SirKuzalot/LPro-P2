@@ -100,6 +100,35 @@ public class ASTMatch implements ASTNode {
                 }
             }
             return new ASTTUnion(new TypeBindList(labelTypes));
+        } else if ( nilType instanceof ASTTStruct && consType instanceof ASTTStruct) {
+            ASTTStruct nilStruct = (ASTTStruct) nilType;
+            ASTTStruct consStruct = (ASTTStruct) consType;
+
+            
+                HashMap<String, ASTType> firstFields = new HashMap<>();
+                HashMap<String, ASTType> combinedFields = new HashMap<>();
+
+
+                for (String label : nilStruct.getLabels()) {
+                    ASTType type = nilStruct.getFieldType(label);
+                    firstFields.put(label, type);
+                }
+
+                
+                for (String label: consStruct.getLabels()) {
+                    ASTType type = consStruct.getFieldType(label);
+                    if (firstFields.containsKey(label)) {
+                        ASTType existingType = firstFields.get(label);
+                        if (existingType.isSubtypeOf(type, e)) {
+                            combinedFields.put(label, type);
+                        } else if (type.isSubtypeOf(existingType, e)) {
+                            combinedFields.put(label, existingType);
+                        } else {
+                            // Do nothing, consider extra types of supertype
+                        }
+                    }
+                }
+                return new ASTTStruct(new TypeBindList(combinedFields));
         } else {
             throw new TypeCheckError("Types of nil case and cons case do not match: " + nilType.toStr() + " and " + consType.toStr());
         }

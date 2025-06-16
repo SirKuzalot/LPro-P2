@@ -76,7 +76,37 @@ public class ASTIf implements ASTNode {
 
                 return new ASTTUnion(new TypeBindList(labelTypes));
 
-            } else {
+            } else if (tthen instanceof ASTTStruct && telse instanceof ASTTStruct) {
+                ASTTStruct structThen = (ASTTStruct) tthen;
+                ASTTStruct structElse = (ASTTStruct) telse;
+
+                HashMap<String, ASTType> firstFields = new HashMap<>();
+                HashMap<String, ASTType> combinedFields = new HashMap<>();
+
+
+                for (String label : structThen.getLabels()) {
+                    ASTType type = structThen.getFieldType(label);
+                    firstFields.put(label, type);
+                }
+
+                
+                for (String label: structElse.getLabels()) {
+                    ASTType type = structElse.getFieldType(label);
+                    if (firstFields.containsKey(label)) {
+                        ASTType existingType = firstFields.get(label);
+                        if (existingType.isSubtypeOf(type, e)) {
+                            combinedFields.put(label, type);
+                        } else if (type.isSubtypeOf(existingType, e)) {
+                            combinedFields.put(label, existingType);
+                        } else {
+                            // Do nothing, consider extra types of supertype
+                        }
+                    }
+                }
+                return new ASTTStruct(new TypeBindList(combinedFields));
+
+            } 
+            else {
                     throw new TypeCheckError("Branches of if must be subtypes of each other, found " + tthen.toStr() + " and " + telse.toStr());
             }
         }
