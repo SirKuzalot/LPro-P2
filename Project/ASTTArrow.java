@@ -1,3 +1,6 @@
+import java.util.HashSet;
+import java.util.Set;
+
 public class ASTTArrow implements ASTType {
     ASTType dom;
     ASTType codom;
@@ -26,10 +29,11 @@ public class ASTTArrow implements ASTType {
         return dom.toStr()+"->"+codom.toStr();
     }   
 
-    public ASTType simplify(Environment<ASTType> e) throws InterpreterError {
-        ASTType simplifiedDom = dom.simplify(e);
-        ASTType simplifiedCodom = codom.simplify(e);
-        return new ASTTArrow(simplifiedDom, simplifiedCodom);
+    public ASTType simplify(Environment<ASTType> e, Set<String> visited) throws InterpreterError {
+
+        dom = dom.simplify(e, new HashSet<String>(visited));
+        codom = codom.simplify(e, visited);
+        return this;
     }
 }
 

@@ -1,4 +1,4 @@
-/* fails */ 
+/* fail */ 
 type Circle = struct { #cx:int, #cy:int, #rad:int };
 type Rectangle = struct { #h:int, #w:int };
 type Blob = union { #circle: Circle, #rect: Rectangle };

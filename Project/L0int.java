@@ -35,11 +35,11 @@ public class L0int {
 				System.out.println(v.toStr());
 			} catch (ParseException e) {
 				System.out.println("Syntax Error.");
-				parser.ReInit(System.in);
+				parser.ReInit(in);
 
 			} catch (Exception e) {
 				e.printStackTrace();
-				parser.ReInit(System.in);
+				parser.ReInit(in);
 			}
 		}
     }

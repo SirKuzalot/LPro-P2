@@ -1,3 +1,5 @@
+import java.util.Set;
+
 public	class ASTTId implements ASTType	{	
 
     String id;	
@@ -12,6 +14,9 @@ public	class ASTTId implements ASTType	{
     
     public boolean isSubtypeOf(ASTType other, Environment<ASTType> e) {
 
+        if (other.toStr().equals(id)) {
+            return true;
+        }
         try {
             ASTType type = e.find(id);
             return type.isSubtypeOf(other, e);
@@ -20,15 +25,27 @@ public	class ASTTId implements ASTType	{
         }
     }
 
-    public ASTType simplify(Environment<ASTType> e) throws InterpreterError {
+    public ASTType simplify(Environment<ASTType> e, Set<String> visited) throws InterpreterError {
+        
+
+
+        if (visited.contains(id)) {
+            throw new InterpreterError("Circular type reference detected for " + id);
+        }
+        visited.add(id);
+
+        ASTType type = null;
         try {
-            ASTType type = this;
-            while (type instanceof ASTTId) {
-                type = e.find(((ASTTId) type).id);
-            }
-            return type.simplify(e);
+            type = e.find(((ASTTId) this).id);
         } catch (InterpreterError ie) {
             throw new InterpreterError("Type " + id + " not found in environment");
+        }
+
+        try {
+            type = type.simplify(e, visited);
+            return type;
+        } catch (InterpreterError ie) {
+            return this;
         }
     }
 

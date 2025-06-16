@@ -1,3 +1,5 @@
+import java.util.Set;
+
 class ASTTBool implements ASTType {
         
     public ASTTBool() {
@@ -9,7 +11,7 @@ class ASTTBool implements ASTType {
         return other instanceof ASTTBool;
     }
 
-    public ASTType simplify(Environment<ASTType> e) throws InterpreterError {
+    public ASTType simplify(Environment<ASTType> e, Set<String> visited) throws InterpreterError {
         return this; 
     }
 }

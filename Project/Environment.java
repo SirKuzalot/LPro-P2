@@ -23,9 +23,6 @@ public class Environment <E>{
     }
 
     void assoc(String id, E bind) throws InterpreterError {
-        if (bindings.containsKey(id)) {
-            throw new InterpreterError("Duplicate binding for " + id);
-        }
         bindings.put(id, bind);
     }
 

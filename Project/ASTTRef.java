@@ -1,3 +1,5 @@
+import java.util.Set;
+
 public class ASTTRef implements ASTType {
 
     private ASTType type;
@@ -22,9 +24,11 @@ public class ASTTRef implements ASTType {
         return false;
     }
 
-    public ASTType simplify(Environment<ASTType> e) throws InterpreterError {
-        ASTType simplifiedType = type.simplify(e);
-        return new ASTTRef(simplifiedType);
+    public ASTType simplify(Environment<ASTType> e, Set<String> visited) throws InterpreterError {
+        
+        type = type.simplify(e, visited);
+        return this;
+
     }
 
 }

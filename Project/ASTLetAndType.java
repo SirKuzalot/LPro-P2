@@ -1,6 +1,10 @@
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 
 public class ASTLetAndType implements ASTNode {
     private List<Bind> decls;
@@ -27,13 +31,24 @@ public class ASTLetAndType implements ASTNode {
 
     public ASTType typecheck(Environment<ASTType> e) throws TypeCheckError {
         Environment<ASTType> newEnv = e.beginScope();
-        for (Bind p: types) {
+        for (Bind p : types) {
             String id = p.getId();
-            ASTType type = p.getType();
             try {
-                newEnv.assoc(id, type);
+                newEnv.assoc(id, new ASTTId(id)); 
             } catch (InterpreterError ex) {
-                throw new TypeCheckError("Error associating identifier " + id + " with type " + type.toStr());
+                throw new TypeCheckError("Error associating identifier " + id + " with type " + new ASTTId(id).toStr());
+            }
+        }
+        
+        for (Bind p : types) {
+            String id = p.getId();
+            try {
+                System.out.println("Type of " + id + " is " + p.getType().toStr());
+                ASTType realType = p.getType().simplify(newEnv, new HashSet<String>(Collections.singleton(id)));
+                System.out.println("Simplified type of " + id + " is " + realType.toStr()); 
+                newEnv.assoc(id, realType);
+            } catch (InterpreterError ex) {
+                throw new TypeCheckError("Error associating identifier " + id + " with type " + p.getType().toStr());
             }
         }
 
@@ -44,9 +59,10 @@ public class ASTLetAndType implements ASTNode {
 
             if (type != null) {
                 try {
-                    type = type.simplify(newEnv);
+                    System.out.println("Type of " + id + " is " + type.toStr());
+                    type = type.simplify(newEnv, new HashSet<>());
+                    System.out.println("Simplified type of " + id + " is " + type.toStr());
                 } catch (InterpreterError ie) {
-                    System.out.println("Blast\n");
 
                     throw new TypeCheckError("Type " + type.toStr() + " not found in environment");
                 }

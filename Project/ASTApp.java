@@ -32,6 +32,7 @@ public class ASTApp implements ASTNode {
             throw new TypeCheckError("Argument type " + t2.toStr() + " is not a subtype of " + argType.toStr());
         }
 
+
         return funType.getCodom();
 
         

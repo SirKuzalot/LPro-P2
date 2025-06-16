@@ -19,7 +19,7 @@ public class ASTNeg implements ASTNode {
 	public ASTType typecheck(Environment<ASTType> e) throws TypeCheckError {
 		ASTType t = exp.typecheck(e);
 		if (!(t instanceof ASTTInt)) {
-			throw new TypeCheckError("neg operator requires an int, found " + t);
+			throw new TypeCheckError("neg operator requires an int, found " + t.toStr());
 		}
 		return new ASTTInt();
 	}

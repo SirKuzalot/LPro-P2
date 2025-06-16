@@ -1,3 +1,4 @@
+import java.util.HashSet;
 
 public class ASTFun implements ASTNode {
     String parameter;
@@ -24,7 +25,7 @@ public class ASTFun implements ASTNode {
         Environment<ASTType> newEnv = e.beginScope();
 
         try {
-            type = type.simplify(newEnv);
+            type = type.simplify(newEnv, new HashSet<>());
         } catch (InterpreterError ie) {
             throw new TypeCheckError("Type " + type.toStr() + " not found in environment");
         }

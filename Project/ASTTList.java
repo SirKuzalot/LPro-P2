@@ -1,3 +1,5 @@
+import java.util.Set;
+
 public class ASTTList implements ASTType {
     private ASTType elt;
 
@@ -22,8 +24,10 @@ public class ASTTList implements ASTType {
         return false;
     }
 
-    public ASTType simplify(Environment<ASTType> e) throws InterpreterError {
-        ASTType simplifiedElt = elt.simplify(e);
-        return new ASTTList(simplifiedElt);
+    public ASTType simplify(Environment<ASTType> e, Set<String> visited) throws InterpreterError {
+
+        elt = elt.simplify(e, visited);
+        return this;
+
     }
 }
