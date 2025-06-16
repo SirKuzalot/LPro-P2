@@ -32,7 +32,20 @@ public class ASTCons implements ASTNode {
         }
 
         if (!(tailType instanceof ASTTList)) {
-            throw new TypeCheckError("Tail must be a list type");
+            try {
+                while (tailType instanceof ASTTId) {
+                    tailType = e.find(tailType.toStr());
+                }
+            } catch (InterpreterError ex) {
+                throw new TypeCheckError("Type " + tailType.toStr() + " not found in environment");
+            }
+
+            if (tailType instanceof ASTTUnit) {
+                return new ASTTList(headType);
+            } else {
+                throw new TypeCheckError("Tail must be a list or nil, found: " + tailType.toStr());
+            }
+
         }
 
         ASTTList listType = (ASTTList) tailType;
