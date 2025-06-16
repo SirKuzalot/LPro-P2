@@ -1,0 +1,24 @@
+let str:string = "Hello, World!";
+let i:int = 0;
+let j:bool = true;
+let k:() = ();
+let l:string = "Goodbye";
+let m:ref<int> = box(42);
+let n:struct { #x: int, #y: int } = { #x = 10, #y = 20 };
+let o:union { #a: int, #b: String } = #a(100);
+
+println(str);
+println(str + i);
+println(i + str);
+println(str + j);
+println(j + str);
+println(str + k);
+println(k + str);
+println(str + l);
+println(l + str);
+println(str + m);
+println(m + str);
+println(str + n);
+println(n + str);
+println(str + o);
+println(o + str);
