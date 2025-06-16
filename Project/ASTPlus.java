@@ -29,14 +29,25 @@ public class ASTPlus implements ASTNode {
                 ASTType t1 = lhs.typecheck(e);
                 ASTType t2 = rhs.typecheck(e);
 
+                try {
+                        while (t1 instanceof ASTTId) {
+                                t1 = e.find(t1.toStr());
+                        }
+                        while (t2 instanceof ASTTId) {
+                                t2 = e.find(t2.toStr());
+                        }
+                } catch (InterpreterError ex) {
+                        throw new TypeCheckError("Error resolving type: " + ex.getMessage());
+                }
+
                 if (t1 instanceof ASTTString || t2 instanceof ASTTString) {
                         return new ASTTString();
                 }
                 if (!(t1 instanceof ASTTInt)) {
-                        throw new TypeCheckError("left operand of + must be an int or string, found " + t1);
+                        throw new TypeCheckError("left operand of + must be an int or string, found " + t1.toStr());
                 }
                 if (!(t2 instanceof ASTTInt)) {
-                        throw new TypeCheckError("right operand of + must be an int or string, found " + t2);
+                        throw new TypeCheckError("right operand of + must be an int or string, found " + t2.toStr());
                 }
                 return new ASTTInt();
         }

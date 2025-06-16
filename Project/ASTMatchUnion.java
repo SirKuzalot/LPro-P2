@@ -32,6 +32,15 @@ public class ASTMatchUnion implements ASTNode {
 
     public ASTType typecheck(Environment<ASTType> env) throws TypeCheckError {
         ASTType exprType = expr.typecheck(env);
+
+        try {
+            while (exprType instanceof ASTTId) {
+                exprType = env.find(exprType.toStr());
+            }
+        } catch (InterpreterError ex) {
+            throw new TypeCheckError("Type " + exprType.toStr() + " not found in environment");
+        }
+        
         if (!(exprType instanceof ASTTUnion)) {
             throw new TypeCheckError("Match on non-variant type");
         }

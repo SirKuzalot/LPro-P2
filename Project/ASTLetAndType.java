@@ -34,19 +34,9 @@ public class ASTLetAndType implements ASTNode {
         for (Bind p : types) {
             String id = p.getId();
             try {
-                newEnv.assoc(id, new ASTTId(id)); 
+                newEnv.assoc(id, p.getType()); 
             } catch (InterpreterError ex) {
                 throw new TypeCheckError("Error associating identifier " + id + " with type " + new ASTTId(id).toStr());
-            }
-        }
-        
-        for (Bind p : types) {
-            String id = p.getId();
-            try {
-                ASTType realType = p.getType().simplify(newEnv, new HashSet<String>(Collections.singleton(id)));
-                newEnv.assoc(id, realType);
-            } catch (InterpreterError ex) {
-                throw new TypeCheckError("Error associating identifier " + id + " with type " + p.getType().toStr());
             }
         }
 
@@ -57,12 +47,9 @@ public class ASTLetAndType implements ASTNode {
 
             if (type != null) {
                 try {
-                    type = type.simplify(newEnv, new HashSet<>());
-                } catch (InterpreterError ie) {
-
-                    throw new TypeCheckError("Type " + type.toStr() + " not found in environment");
-                }
-                try {
+                    while (type instanceof ASTTId) {
+                        type = newEnv.find(type.toStr());
+                    }
                     newEnv.assoc(id, type);
                 } catch (InterpreterError ex) {
                     throw new TypeCheckError("Error associating identifier " + id + " with type " + type.toStr());

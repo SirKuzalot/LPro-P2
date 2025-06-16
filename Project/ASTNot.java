@@ -15,6 +15,15 @@ public class ASTNot implements ASTNode  {
     public ASTType typecheck(Environment<ASTType> e) throws TypeCheckError
     {
         ASTType t = n.typecheck(e);
+
+        try {
+            while (t instanceof ASTTId) {
+                t = e.find(t.toStr());
+            }
+        } catch (InterpreterError ex) {
+            throw new TypeCheckError("Error resolving type: " + ex.getMessage());
+        }
+        
         if (!(t instanceof ASTTBool)) {
             throw new TypeCheckError("Not operator requires a boolean operand, found: " + t.toStr());
         }

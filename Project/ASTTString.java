@@ -12,8 +12,4 @@ public class ASTTString implements ASTType {
         return other instanceof ASTTString;
     }
 
-    public ASTType simplify(Environment<ASTType> e, Set<String> visited) throws InterpreterError {
-        return this; 
-    }
-
 }

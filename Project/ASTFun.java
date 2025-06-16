@@ -23,12 +23,6 @@ public class ASTFun implements ASTNode {
     public ASTType typecheck(Environment<ASTType> e) throws TypeCheckError
     {
         Environment<ASTType> newEnv = e.beginScope();
-
-        try {
-            type = type.simplify(newEnv, new HashSet<>());
-        } catch (InterpreterError ie) {
-            throw new TypeCheckError("Type " + type.toStr() + " not found in environment");
-        }
         
         try {
             newEnv.assoc(parameter, type);

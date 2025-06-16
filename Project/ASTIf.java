@@ -20,9 +20,19 @@ public class ASTIf implements ASTNode {
 
     public ASTType typecheck(Environment<ASTType> e) throws TypeCheckError {
         ASTType tcond = cond.typecheck(e);
-        if (!(tcond instanceof ASTTBool)) {
-            throw new TypeCheckError("Condition of if must be a boolean, found " + tcond);
+
+        try {
+            while (tcond instanceof ASTTId) {
+                tcond = e.find(((ASTTId) tcond).toStr());
+            }
+        } catch (InterpreterError ex) {
+            throw new TypeCheckError("Type variable not found: " + tcond.toStr());
         }
+
+        if (!(tcond instanceof ASTTBool)) {
+            throw new TypeCheckError("Condition of if must be a boolean, found " + tcond.toStr());
+        }
+        
         ASTType tthen = thenn.typecheck(e);
         ASTType telse = elsee.typecheck(e);
 

@@ -20,6 +20,15 @@ public class ASTStar implements ASTNode {
     {
         ASTType t1 = n1.typecheck(e);
 
+
+        try {
+            while (t1 instanceof ASTTId) {
+                t1 = e.find(t1.toStr());
+            }
+        } catch (InterpreterError ex) {
+            throw new TypeCheckError("Error resolving type: " + ex.getMessage());
+        }
+
         if (!(t1 instanceof ASTTRef)) {
             throw new TypeCheckError("Expected a box type, but got " + t1.toStr());
         }

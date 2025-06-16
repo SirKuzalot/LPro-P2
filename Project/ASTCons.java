@@ -18,6 +18,19 @@ public class ASTCons implements ASTNode {
         ASTType headType = head.typecheck(e);
         ASTType tailType = tail.typecheck(e);
 
+        try {
+            while (headType instanceof ASTTId) {
+                headType = e.find(headType.toStr());
+            }
+
+            while (tailType instanceof ASTTId) {
+                tailType = e.find(tailType.toStr());
+            }
+            
+        } catch (InterpreterError ex) {
+            throw new TypeCheckError("Type " + headType.toStr() + " not found in environment");
+        }
+
         if (!(tailType instanceof ASTTList)) {
             throw new TypeCheckError("Tail must be a list type");
         }

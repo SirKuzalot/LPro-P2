@@ -41,6 +41,17 @@ public class ASTComp implements ASTNode {
         ASTType lt = left.typecheck(e);
         ASTType rt = right.typecheck(e);
 
+        try {
+            while (lt instanceof ASTTId) {
+                lt = e.find(lt.toStr());
+            }
+            while (rt instanceof ASTTId) {
+                rt = e.find(rt.toStr());
+            }
+        } catch (InterpreterError ex) {
+            throw new TypeCheckError("Error resolving type: " + ex.getMessage());
+        }
+
         if (!(lt instanceof ASTTInt)) {
             throw new TypeCheckError("Left operand must be of type int, but got " + lt.toStr());
         }

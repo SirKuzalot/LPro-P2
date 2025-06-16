@@ -31,11 +31,4 @@ public class ASTTList implements ASTType {
         }
         return false;
     }
-
-    public ASTType simplify(Environment<ASTType> e, Set<String> visited) throws InterpreterError {
-
-        elt = elt.simplify(e, visited);
-        return this;
-
-    }
 }

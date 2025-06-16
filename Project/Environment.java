@@ -23,6 +23,9 @@ public class Environment <E>{
     }
 
     void assoc(String id, E bind) throws InterpreterError {
+        if (bindings.containsKey(id)) {
+            throw new InterpreterError("Identifier " + id + " already bound in this scope");
+        }
         bindings.put(id, bind);
     }
 

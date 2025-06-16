@@ -11,12 +11,4 @@ class ASTTUnit implements ASTType {
     public boolean isSubtypeOf(ASTType other, Environment<ASTType> e) {
         return other instanceof ASTTUnit;
     }
-
-    public ASTType simplify(Environment<ASTType> e) throws InterpreterError {
-        return this; 
-    }
-
-    public ASTType simplify(Environment<ASTType> e, Set<String> visited) throws InterpreterError {
-        return this; 
-    }
 }

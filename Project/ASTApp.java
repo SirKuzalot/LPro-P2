@@ -21,8 +21,16 @@ public class ASTApp implements ASTNode {
         ASTType t1 = n1.typecheck(e);
         ASTType t2 = n2.typecheck(e);
 
+        try {
+            while (t1 instanceof ASTTId) {
+                t1 = e.find(t1.toStr());
+            }
+        } catch (InterpreterError ex) {
+            throw new TypeCheckError("Type " + t1.toStr() + " not found in environment");
+        }
+
         if (!(t1 instanceof ASTTArrow)) {
-            throw new TypeCheckError("Expected a function type, but got " + t1);
+            throw new TypeCheckError("Expected a function type, but got " + t1.toStr());
         }
 
         ASTTArrow funType = (ASTTArrow) t1;

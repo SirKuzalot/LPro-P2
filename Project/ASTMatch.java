@@ -38,6 +38,16 @@ public class ASTMatch implements ASTNode {
 
     public ASTType typecheck(Environment<ASTType> e) throws TypeCheckError {
         ASTType exprType = expr.typecheck(e);
+
+        try {
+            while (exprType instanceof ASTTId) {
+                exprType = e.find(exprType.toStr());
+            }
+        } catch (InterpreterError ex) {
+            throw new TypeCheckError("Type " + exprType.toStr() + " not found in environment");
+        }
+
+        
         if (!(exprType instanceof ASTTList)) {
             throw new TypeCheckError("Match expression must be a list, found: " + exprType.toStr());
         }

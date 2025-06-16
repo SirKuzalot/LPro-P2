@@ -16,6 +16,15 @@ public class ASTWhile implements ASTNode {
 
     public ASTType typecheck(Environment<ASTType> e) throws TypeCheckError {
         ASTType condType = cond.typecheck(e);
+
+        try {
+            while (condType instanceof ASTTId) {
+                condType = e.find(condType.toStr());
+            }
+        } catch (InterpreterError ex) {
+            throw new TypeCheckError("Type variable not found: " + condType.toStr());
+        }
+        
         if (!(condType instanceof ASTTBool)) {
             throw new TypeCheckError("While condition must be a boolean, found: " + condType.toStr());
         }

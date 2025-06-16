@@ -25,28 +25,4 @@ public	class ASTTId implements ASTType	{
         }
     }
 
-    public ASTType simplify(Environment<ASTType> e, Set<String> visited) throws InterpreterError {
-        
-
-
-        if (visited.contains(id)) {
-            throw new InterpreterError("Circular type reference detected for " + id);
-        }
-        visited.add(id);
-
-        ASTType type = null;
-        try {
-            type = e.find(((ASTTId) this).id);
-        } catch (InterpreterError ie) {
-            throw new InterpreterError("Type " + id + " not found in environment");
-        }
-
-        try {
-            type = type.simplify(e, visited);
-            return type;
-        } catch (InterpreterError ie) {
-            return this;
-        }
-    }
-
 }	

@@ -32,11 +32,4 @@ public class ASTTRef implements ASTType {
         return false;
     }
 
-    public ASTType simplify(Environment<ASTType> e, Set<String> visited) throws InterpreterError {
-        
-        type = type.simplify(e, visited);
-        return this;
-
-    }
-
 }

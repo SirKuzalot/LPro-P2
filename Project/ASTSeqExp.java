@@ -22,6 +22,17 @@ public class ASTSeqExp implements ASTNode {
         ASTType t1 = n1.typecheck(e);
         ASTType t2 = n2.typecheck(e);
 
+        try {
+            while (t1 instanceof ASTTId) {
+                t1 = e.find(t1.toStr());
+            }
+            while (t2 instanceof ASTTId) {
+                t2 = e.find(t2.toStr());
+            }
+        } catch (InterpreterError ex) {
+            throw new TypeCheckError("Error resolving type: " + ex.getMessage());
+        }
+
         if (!(t1 instanceof ASTTRef)) {
             throw new TypeCheckError("Expected a box type, but got " + t1);
         }

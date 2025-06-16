@@ -38,11 +38,5 @@ public class ASTTArrow implements ASTType {
         return dom.toStr()+"->"+codom.toStr();
     }   
 
-    public ASTType simplify(Environment<ASTType> e, Set<String> visited) throws InterpreterError {
-
-        dom = dom.simplify(e, new HashSet<String>(visited));
-        codom = codom.simplify(e, visited);
-        return this;
-    }
 }
 
