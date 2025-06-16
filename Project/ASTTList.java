@@ -20,6 +20,14 @@ public class ASTTList implements ASTType {
         if (other instanceof ASTTList) {
             ASTTList otherList = (ASTTList) other;
             return elt.isSubtypeOf(otherList.elt, e);
+        } else if (other instanceof ASTTId) {
+            ASTTId otherId = (ASTTId) other;
+            try {
+                other = e.find(otherId.toStr());
+            } catch (InterpreterError ex) {
+                return false;
+            }
+            return this.isSubtypeOf(other, e);
         }
         return false;
     }

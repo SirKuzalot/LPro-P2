@@ -21,6 +21,15 @@ public class ASTTArrow implements ASTType {
         if (other instanceof ASTTArrow) {
             ASTTArrow otherArrow = (ASTTArrow) other;
             return otherArrow.getDom().isSubtypeOf(dom, e) && codom.isSubtypeOf(otherArrow.getCodom(), e);
+        } else if (other instanceof ASTTId) {
+
+            ASTTId otherId = (ASTTId) other;
+            try {
+                other = e.find(otherId.toStr());
+            } catch (InterpreterError ex) {
+                return false;
+            }
+            return this.isSubtypeOf(other, e);
         }
         return false;
     }

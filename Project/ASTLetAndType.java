@@ -43,9 +43,7 @@ public class ASTLetAndType implements ASTNode {
         for (Bind p : types) {
             String id = p.getId();
             try {
-                System.out.println("Type of " + id + " is " + p.getType().toStr());
                 ASTType realType = p.getType().simplify(newEnv, new HashSet<String>(Collections.singleton(id)));
-                System.out.println("Simplified type of " + id + " is " + realType.toStr()); 
                 newEnv.assoc(id, realType);
             } catch (InterpreterError ex) {
                 throw new TypeCheckError("Error associating identifier " + id + " with type " + p.getType().toStr());
@@ -59,9 +57,7 @@ public class ASTLetAndType implements ASTNode {
 
             if (type != null) {
                 try {
-                    System.out.println("Type of " + id + " is " + type.toStr());
                     type = type.simplify(newEnv, new HashSet<>());
-                    System.out.println("Simplified type of " + id + " is " + type.toStr());
                 } catch (InterpreterError ie) {
 
                     throw new TypeCheckError("Type " + type.toStr() + " not found in environment");

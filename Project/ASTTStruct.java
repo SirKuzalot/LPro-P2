@@ -48,6 +48,14 @@ public class ASTTStruct implements ASTType {
                 }
             }
             return true;
+        } else if (other instanceof ASTTId) {
+            ASTTId otherId = (ASTTId) other;
+            try {
+                other = e.find(otherId.toStr());
+            } catch (InterpreterError ex) {
+                return false;
+            }
+            return this.isSubtypeOf(other, e);
         }
 
         return false;

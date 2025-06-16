@@ -20,6 +20,14 @@ public class ASTTRef implements ASTType {
             ASTTRef otherRef = (ASTTRef) other;
             return type.isSubtypeOf(otherRef.getType(), e) && 
                    otherRef.getType().isSubtypeOf(type, e);
+        } else if (other instanceof ASTTId) {
+            ASTTId otherId = (ASTTId) other;
+            try {
+                other = e.find(otherId.toStr());
+            } catch (InterpreterError ex) {
+                return false;
+            }
+            return this.isSubtypeOf(other, e);
         }
         return false;
     }
