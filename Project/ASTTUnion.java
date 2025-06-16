@@ -1,5 +1,6 @@
 import java.util.HashSet;
 import java.util.Set;
+import java.util.List;
 
 public class ASTTUnion implements ASTType {
 
@@ -15,6 +16,10 @@ public class ASTTUnion implements ASTType {
 
     public ASTType getFieldType(String fieldName) {
         return ll.getType(fieldName);
+    }
+
+    List<String> getLabels() {
+        return ll.getLabels();
     }
     
     public String toStr() {

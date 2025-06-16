@@ -85,6 +85,35 @@ public class ASTMatchUnion implements ASTNode {
             }
         }
 
+        for (int i = 0; i < bodyTypes.size(); i++) {
+            if (!(bodyTypes.get(i) instanceof ASTTUnion)) {
+                throw new TypeCheckError("No common supertype found for match bodies");
+            }
+        }
+
+        HashMap<String, ASTType> labelTypes = new HashMap<>();
+        for (ASTType bodyType : bodyTypes) {
+            ASTTUnion unionBodyType = (ASTTUnion) bodyType;
+            TypeBindList bodyFieldTypes = unionBodyType.getTypeBindList();
+            for (String label : bodyFieldTypes.getLabels()) {
+                ASTType type = bodyFieldTypes.getType(label);
+                if (labelTypes.containsKey(label)) {
+                    ASTType existingType = labelTypes.get(label);
+                    if (existingType.isSubtypeOf(type, env)) {
+                        labelTypes.put(label, type);
+                    } else if (type.isSubtypeOf(existingType, env)) {
+                        // Do nothing, existingType is already a supertype
+                    } else {
+                        throw new TypeCheckError("Branches of match must be subtypes of each other for label " + label + ", found " + existingType.toStr() + " and " + type.toStr());
+                    }
+                } else {
+                    labelTypes.put(label, type);
+                }
+            }
+
+            return new ASTTUnion(new TypeBindList(labelTypes));
+        }
+
         throw new TypeCheckError("No common supertype found for match bodies");
 
 

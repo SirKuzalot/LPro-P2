@@ -1,3 +1,5 @@
+import java.util.HashMap;
+
 public class ASTMatch implements ASTNode {
     ASTNode expr;
     ASTNode nilCase;
@@ -68,6 +70,36 @@ public class ASTMatch implements ASTNode {
             return consType;
         } else if (consType.isSubtypeOf(nilType, env)) {
             return nilType;
+        } else if (nilType instanceof ASTTUnion && consType instanceof ASTTUnion) {
+
+            HashMap<String, ASTType> labelTypes = new java.util.HashMap<>();
+            
+            ASTTUnion unil = ((ASTTUnion) nilType);
+            ASTTUnion ucons = ((ASTTUnion) consType);
+            
+            
+            for (String label : unil.getLabels()) {
+                ASTType type = unil.getFieldType(label);
+                labelTypes.put(label, type);
+            } 
+
+            for (String label : ucons.getLabels()) {
+                ASTType type = ucons.getFieldType(label);
+
+                if(labelTypes.containsKey(label)) {
+                    ASTType existingType = labelTypes.get(label);
+                    if (existingType.isSubtypeOf(type, e)) {
+                        labelTypes.put(label, type);
+                    } else if (type.isSubtypeOf(existingType, e)) {
+                        // Do nothing, existingType is already a supertype
+                    } else {
+                        throw new TypeCheckError("Branches of match must be subtypes of each other for label " + label + ", found " + existingType.toStr() + " and " + type.toStr());
+                    }
+                } else {
+                    labelTypes.put(label, type);
+                }
+            }
+            return new ASTTUnion(new TypeBindList(labelTypes));
         } else {
             throw new TypeCheckError("Types of nil case and cons case do not match: " + nilType.toStr() + " and " + consType.toStr());
         }
