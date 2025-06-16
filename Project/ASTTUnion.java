@@ -35,6 +35,7 @@ public class ASTTUnion implements ASTType {
     public boolean isSubtypeOf(ASTType other, Environment<ASTType> e) {
         if (other instanceof ASTTUnion) {
             ASTTUnion otherUnion = (ASTTUnion) other;
+
             TypeBindList otherFields = otherUnion.getTypeBindList();
             TypeBindList thisFields = this.getTypeBindList();
 
@@ -48,7 +49,7 @@ public class ASTTUnion implements ASTType {
             for (String field : thisFields.getLabels()) {
                 ASTType thisFieldType = thisFields.getType(field);
                 ASTType otherFieldType = otherFields.getType(field);
-                if (!otherFieldType.isSubtypeOf(thisFieldType, e)) {
+                if (!thisFieldType.isSubtypeOf(otherFieldType, e)) {
                     return false;
                 }
             }
