@@ -1,5 +1,10 @@
 #!/bin/bash
 
+if [ $# -eq 0 ]; then
+    java L0int
+    exit 0
+fi
+
 if [ $# -ne 1 ]; then
     echo "Usage: $0 <test_folder>"
     exit 1
