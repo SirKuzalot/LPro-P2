@@ -251,13 +251,13 @@ ASTNode Term() :
 }
 {
     t1 = FactorWithFields() (
-        <CONS> t2 = Term() { t1 = new ASTCons(t1, t2, false); }
-      | <LAZYCONS> t2 = Term() { t1 = new ASTCons(t1, t2, true); }
+        <CONS> t2 = FactorWithFields() { t1 = new ASTCons(t1, t2, false); }
+      | <LAZYCONS> t2 = FactorWithFields() { t1 = new ASTCons(t1, t2, true); }
       | (
         op=<STAR> t2 = FactorWithFields() { t1 = new ASTMult(t1,t2); }
       | op=<DIV> t2 = FactorWithFields() { t1 = new ASTDiv(t1,t2); }
       | op = <UNIT> { t1 = new ASTApp(t1, new ASTUnit()); }
-      | op = <LPAR> t2 = Exp () <RPAR> { t1 = new ASTApp(t1, t2); }
+      | op = <LPAR> t2 = BA() <RPAR> { t1 = new ASTApp(t1, t2); }
 
     )*
     ) { return t1; }
@@ -288,7 +288,7 @@ ASTNode Fact() :
       n=<Num> { t = new ASTInt(Integer.parseInt(n.image)); } 
     | n=<TRUE> { t = new ASTTrue(); }
     | n=<FALSE> {  t = new ASTFalse();}
-    | n=<Label> <LPAR> e1 = Term() <RPAR> { t = new ASTUnion(n.image, e1); }
+    | n=<Label> <LPAR> e1 = BA() <RPAR> { t = new ASTUnion(n.image, e1); }
     | n=<Id> { t = new ASTId(n.image); } 
     | <BOX> t=Fact() {  t = new ASTBox(t); }
     | <STAR> t=Fact() { t = new ASTStar(t); }
@@ -374,8 +374,8 @@ ASTNode RecordTerm() :
 {
     <LBRA>
     (
-        lbl = <Label> <EQUAL> value = Term() { fields.put(lbl.image, value); }
-        ( <COMMA> lbl = <Label> <EQUAL> value = Term() { fields.put(lbl.image, value); } )*
+        lbl = <Label> <EQUAL> value = BA() { fields.put(lbl.image, value); }
+        ( <COMMA> lbl = <Label> <EQUAL> value = BA() { fields.put(lbl.image, value); } )*
     )?
     <RBRA>
     { t = new ASTStruct(fields); }

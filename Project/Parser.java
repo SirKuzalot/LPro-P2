@@ -274,13 +274,13 @@ public class Parser implements ParserConstants {
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case CONS:
       jj_consume_token(CONS);
-      t2 = Term();
-                             t1 = new ASTCons(t1, t2, false);
+      t2 = FactorWithFields();
+                                         t1 = new ASTCons(t1, t2, false);
       break;
     case LAZYCONS:
       jj_consume_token(LAZYCONS);
-      t2 = Term();
-                                 t1 = new ASTCons(t1, t2, true);
+      t2 = FactorWithFields();
+                                             t1 = new ASTCons(t1, t2, true);
       break;
     default:
       jj_la1[14] = jj_gen;
@@ -314,9 +314,9 @@ public class Parser implements ParserConstants {
           break;
         case LPAR:
           op = jj_consume_token(LPAR);
-          t2 = Exp();
+          t2 = BA();
           jj_consume_token(RPAR);
-                                         t1 = new ASTApp(t1, t2);
+                                       t1 = new ASTApp(t1, t2);
           break;
         default:
           jj_la1[13] = jj_gen;
@@ -373,9 +373,9 @@ public class Parser implements ParserConstants {
     case Label:
       n = jj_consume_token(Label);
       jj_consume_token(LPAR);
-      e1 = Term();
+      e1 = BA();
       jj_consume_token(RPAR);
-                                            t = new ASTUnion(n.image, e1);
+                                          t = new ASTUnion(n.image, e1);
       break;
     case Id:
       n = jj_consume_token(Id);
@@ -580,8 +580,8 @@ ASTType at;
     case Label:
       lbl = jj_consume_token(Label);
       jj_consume_token(EQUAL);
-      value = Term();
-                                               fields.put(lbl.image, value);
+      value = BA();
+                                             fields.put(lbl.image, value);
       label_12:
       while (true) {
         switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
@@ -595,8 +595,8 @@ ASTType at;
         jj_consume_token(COMMA);
         lbl = jj_consume_token(Label);
         jj_consume_token(EQUAL);
-        value = Term();
-                                                         fields.put(lbl.image, value);
+        value = BA();
+                                                       fields.put(lbl.image, value);
       }
       break;
     default:
